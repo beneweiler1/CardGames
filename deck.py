@@ -4,7 +4,7 @@ class Card:
     def __init__(self, suit, val):
         self.suit = suit
         self.val = val
-    def show(self):
+    def showCard(self):
         print("{} of {}".format(self.val, self.suit))
 
     def getSuite(self):
@@ -26,15 +26,18 @@ class Deck:
                 self.cards.append(Card(s,v))
             #self.cards.append(Card('W','W')) #wizard
             #self.cards.append(Card('J','J')) #joker
-    def show(self):
+    def showDeck(self):
         for c in self.cards:
-            c.show()
+            c.showCard()
 
     def shuffle(self):
         random.shuffle(self.cards)
     
     def drawCard(self):
         return self.cards.pop()
+
+    def getSize(self):
+        return len(self.cards)
 
 class Player:
     def __init__(self, name):
@@ -51,7 +54,7 @@ class Player:
 
     def showHand(self):
         for card in self.hand:
-            card.show() 
+            card.showCard() 
 
     def getSum(self):
         self.sum = 0
@@ -59,18 +62,21 @@ class Player:
             self.sum = self.sum + card.getVal()
         return self.sum
         
-    def getHand(self):
+    def printHand(self):
         for card in self.hand:
             print(card.getCard())
+
+    def getHand(self):
+        return self.hand
 
     def resetHand(self):
         self.hand = []
 
 class Game():
-    def __init__(self):
+    def __init__(self, handSize):
         self.players = []
         self.deck = Deck()
-        self.turn = 2
+        self.handSize = handSize
 
     def addPlayer(self, name):
         player = Player(name)
@@ -88,27 +94,19 @@ class Game():
         self.deck.shuffle()
         for p in self.players:
             p.resetHand()
-        for p in self.players:
-            p.resetHand()
-            for r in range (0, self.turn):
+            for r in range (0, self.handSize):
                 p.draw(self.deck)
-            print(p.getName())
-            p.showHand()
+            #print(p.getName())
+            #p.showHand()
         
 
     def checkSum(self):
         for p in self.players:
-            print(p.getSum())
+            print(p.getName() + ":",p.getSum())
         #give player a null val if over 21
 
     def hit(self, name):
         p = self.getPlayer(name)
         p.draw(self.deck)
-        p.showHand()
+        #p.showHand()
 
-G1 = Game()
-G1.addPlayer("Ben")
-G1.addPlayer("G")
-G1.newRound()
-G1.checkSum()
-G1.hit("Ben")
